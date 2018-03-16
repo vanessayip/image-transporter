@@ -1,25 +1,55 @@
-const { expect } = require('chai')
-require('dotenv').config();
-const port = process.env.PORT || 8080;
+const chai = require('chai');
+const expect = chai.expect;
+const encoder = require('./encoder.js');
+const decoder = require('./decoder.js');
+chai.use(require('chai-fs'));
 
-describe('Test spec for ascii img transport', () => {
-  let server;
-  beforeEach((done) => {
-    server = app.listen(port, done);
-  });
-
-  afterEach(() => {
-    server.close();
-  });
-  xdescribe('Test for encoder', () => {
-    it('', () => {
+describe('Test spec for ascii image transport', () => {
+  describe('Test for encoder', () => {
+    let inputFile = 'small-img.txt';
+    it('the output of the function should be a promise', () => {
+      expect(encoder(inputFile)).to.be.a('promise');
+    });
+    it('in the output promise, a hashmap would be produced', () => {
+      encoder(inputFile)
+      .then((encoderResult) => {
+        expect(encoderResult).to.be.an('object');
+      })
     });
   });
-  xdescribe('Test for decoder', () => {
-    it('should get a 200 response for GET request', (done) => {
-      request(app)
-        .get('/')
-        .expect(200, done);
+  describe('Test for decoder', () => {
+    let map = { 
+      a: [ [ 0, 0 ], [ 2, 0 ] ],
+      b: [ [ 0, 1 ], [ 2, 1 ], [ 3, 1 ] ],
+      c: [ [ 0, 2 ], [ 3, 2 ] ],
+      d: [ [ 0, 3 ] ],
+      e: [ [ 0, 4 ] ],
+      '~': [ [ 1, 0 ] ],
+      '!': [ [ 1, 1 ] ],
+      '@': [ [ 1, 2 ] ],
+      '#': [ [ 1, 3 ] ],
+      '$': [ [ 1, 4 ] ],
+      C: [ [ 2, 2 ] ],
+      ' ': [ [ 2, 3 ] ],
+      '<': [ [ 2, 4 ] ],
+      A: [ [ 3, 0 ] ],
+      D: [ [ 3, 3 ] ],
+      E: [ [ 3, 4 ] ],
+      '{': [ [ 4, 0 ] ],
+      '}': [ [ 4, 1 ] ],
+      '|': [ [ 4, 2 ] ],
+      ':': [ [ 4, 3 ] ],
+      '"': [ [ 4, 4 ] ] 
+    };
+
+    it('the output should be a promise', () => {
+      expect(decoder(map, 5, 'output.txt')).to.be.a('promise');
+    });
+    it('in the output promise, a txt file would be produced and is not empty', () => {
+      decoder(map, 5, 'output.txt')
+      .then((decoderResult) => {
+        expect(`${__dirname}/output.txt`).to.be.a.file().and.not.empty;
+      })
     });
   });
 });

@@ -13,5 +13,6 @@
     "mocha": "^5.0.1"
   },
   "devDependencies": {
+    "chai-fs": "^2.0.0"
   }
 }
