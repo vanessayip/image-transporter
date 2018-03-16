@@ -37,15 +37,3 @@ module.exports = (filePath) => {
   });
 
 }
-
-var filePath = 'data.txt';
-
-// encoder(filePath)
-// .then((encoderResult) => {
-//   console.log('encoder finished');
-//   return decoder(encoderResult, 100, 'output.txt')
-// })
-// .then((decoderResult) => {
-//   console.log('decoder finished');
-// });
-

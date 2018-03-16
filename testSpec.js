@@ -5,6 +5,7 @@ const decoder = require('./decoder.js');
 chai.use(require('chai-fs'));
 
 describe('Test spec for ascii image transport', () => {
+  
   describe('Test for encoder', () => {
     let inputFile = 'small-img.txt';
     it('the output of the function should be a promise', () => {
@@ -17,6 +18,7 @@ describe('Test spec for ascii image transport', () => {
       })
     });
   });
+
   describe('Test for decoder', () => {
     let map = { 
       a: [ [ 0, 0 ], [ 2, 0 ] ],
@@ -42,14 +44,24 @@ describe('Test spec for ascii image transport', () => {
       '"': [ [ 4, 4 ] ] 
     };
 
-    it('the output should be a promise', () => {
-      expect(decoder(map, 5, 'output.txt')).to.be.a('promise');
-    });
     it('in the output promise, a txt file would be produced and is not empty', () => {
-      decoder(map, 5, 'output.txt')
+      decoder(map, 5, 'small-img-output.txt')
       .then((decoderResult) => {
-        expect(`${__dirname}/output.txt`).to.be.a.file().and.not.empty;
+        expect(`${__dirname}/small-img-output.txt`).to.be.a.file().and.not.empty;
       })
+    });
+
+  });
+
+  describe('Integration test for encoder and decoder', () => {
+    it('should expect that the output file after running encode and decode successively would return the original input', () => {
+      encoder(`data.txt`)
+      .then((encoderResult) => {
+        return decoder(encoderResult, 100, 'output.txt')
+      })
+      .then((decoderResult) => {
+        expect(`${__dirname/data.txt}`).to.be.a.file().and.equal(`${__dirname/output.txt}`);
+      });
     });
   });
 });
